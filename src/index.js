@@ -49,10 +49,21 @@ const addCartItem = (event) => {
 $productCardGrid.addEventListener('click', addCartItem);
 
 // 7. 장바구니 상품 삭제 기능
-const removeCartItem = (event) => {
-  if (event.target.className === 'remove-btn') {
-    cartList.removeCartItem(event.target.closest('li').id);
+const modifyCartItem = (event) => {
+  const currentProductId = +event.target.closest('li').id;
+  switch (event.target.className) {
+    case 'increase-btn':
+      cartList.increaseCartItem(currentProductId);
+      break;
+    case 'decrease-btn':
+      cartList.decreaseCartItem(currentProductId);
+      break;
+    case 'remove-btn':
+      cartList.removeCartItem(currentProductId);
+      break;
+    default:
+      return;
   }
 };
 
-$cartList.addEventListener('click', removeCartItem);
+$cartList.addEventListener('click', modifyCartItem);

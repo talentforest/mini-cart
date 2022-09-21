@@ -1,3 +1,6 @@
+const MIN_COUNT = 1;
+const MAX_COUNT = 10;
+
 class CartList {
   constructor($target, initialState) {
     this.$target = $target;
@@ -15,7 +18,40 @@ class CartList {
   }
 
   addCartItem(productData) {
-    const newState = [...this.state, { ...productData, count: 1 }];
+    let newState;
+
+    const clickedProductId = productData.id;
+    const checkedIdx = this.state.findIndex(
+      (item) => item.id === clickedProductId
+    );
+    if (checkedIdx === -1) {
+      newState = [...this.state, { ...productData, count: 1 }];
+    } else {
+      newState = [...this.state];
+      newState[checkedIdx].count += 1;
+    }
+    this.setState(newState);
+  }
+
+  increaseCartItem(id) {
+    const newState = [...this.state];
+    const checkedIdx = this.state.findIndex((item) => item.id === id);
+    if (newState[checkedIdx].count < MAX_COUNT) {
+      newState[checkedIdx].count += 1;
+    } else {
+      alert('장바구니에 담을 수 있는 최대 수량은 10개입니다.');
+    }
+    this.setState(newState);
+  }
+
+  decreaseCartItem(id) {
+    const newState = [...this.state];
+    const checkedIdx = this.state.findIndex((item) => item.id === id);
+    if (newState[checkedIdx].count > MIN_COUNT) {
+      newState[checkedIdx].count -= 1;
+    } else {
+      alert('장바구니에 담을 수 있는 최소 수량은 1개입니다.');
+    }
     this.setState(newState);
   }
 
@@ -29,9 +65,10 @@ class CartList {
     this.$totalCount.innerHTML =
       this.state // 6. 장바구니 총 가격 합산 기능
         .reduce((acc, curr) => {
-          return acc + curr.price;
+          return acc + curr.price * curr.count;
         }, 0)
         .toLocaleString() + '원';
+
     this.$container.innerHTML = this.state
       .map((item) => {
         return `
@@ -50,7 +87,9 @@ class CartList {
                   class="flex justify-between text-base font-medium text-gray-900"
                 >
                   <h3>${item.name}</h3>
-                  <p class="ml-4">${item.price.toLocaleString()}</p>
+                  <p class="ml-4">${(
+                    item.count * item.price
+                  ).toLocaleString()}</p>
                 </div>
               </div>
               <div class="flex flex-1 items-end justify-between">
