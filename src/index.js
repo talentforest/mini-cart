@@ -40,7 +40,6 @@ const addCartItem = (event) => {
   const clickedProduct = productData.find(
     (product) => product.id === +event.target.dataset.productid
   );
-
   if (clickedProduct) {
     cartList.addCartItem(clickedProduct);
     toggleShoppingCart();
@@ -48,3 +47,12 @@ const addCartItem = (event) => {
 };
 
 $productCardGrid.addEventListener('click', addCartItem);
+
+// 7. 장바구니 상품 삭제 기능
+const removeCartItem = (event) => {
+  if (event.target.className === 'remove-btn') {
+    cartList.removeCartItem(event.target.closest('li').id);
+  }
+};
+
+$cartList.addEventListener('click', removeCartItem);

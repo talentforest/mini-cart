@@ -3,6 +3,7 @@ class CartList {
     this.$target = $target;
     this.$container = document.createElement('ul');
     this.$container.className = 'divide-y divide-gray-200';
+    this.$totalCount = document.getElementById('total-count');
     this.state = initialState; //초기 렌더링 데이터
     this.$target.append(this.$container);
     this.render();
@@ -15,15 +16,26 @@ class CartList {
 
   addCartItem(productData) {
     const newState = [...this.state, { ...productData, count: 1 }];
-    console.log(newState);
     this.setState(newState);
   }
 
+  removeCartItem(id) {
+    const newState = this.state.filter((item) => item.id !== +id);
+    this.setState(newState);
+    console.log(newState);
+  }
+
   render() {
+    this.$totalCount.innerHTML =
+      this.state // 6. 장바구니 총 가격 합산 기능
+        .reduce((acc, curr) => {
+          return acc + curr.price;
+        }, 0)
+        .toLocaleString() + '원';
     this.$container.innerHTML = this.state
       .map((item) => {
         return `
-          <li class="flex py-6" id="4">
+          <li class="flex py-6" id=${item.id}>
             <div
               class="h-24 w-24 overflow-hidden rounded-md border border-gray-200"
             >
