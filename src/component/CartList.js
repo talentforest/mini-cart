@@ -61,6 +61,10 @@ class CartList {
     console.log(newState);
   }
 
+  saveToLocalStorage = () => {
+    localStorage.setItem('cartState', JSON.stringify(this.state));
+  };
+
   render() {
     this.$totalCount.innerHTML =
       this.state // 6. 장바구니 총 가격 합산 기능

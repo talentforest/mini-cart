@@ -34,7 +34,11 @@ $backdrop.addEventListener('click', toggleShoppingCart);
 
 // 4. 장바구니 렌더링하기 5. 장바구니 추가 기능
 const $cartList = document.getElementById('cart-list');
-const cartList = new CartList($cartList, []);
+
+const initialCartState = localStorage.getItem('cartState')
+  ? JSON.parse(localStorage.getItem('cartState'))
+  : [];
+const cartList = new CartList($cartList, initialCartState);
 
 const addCartItem = (event) => {
   const clickedProduct = productData.find(
@@ -67,3 +71,12 @@ const modifyCartItem = (event) => {
 };
 
 $cartList.addEventListener('click', modifyCartItem);
+
+// 10. web storage api를 사용한 장바구니 데이터 저장 기능
+const paymentBtn = document.getElementById('payment-btn');
+
+const saveToLocalStorage = () => {
+  cartList.saveToLocalStorage();
+};
+
+paymentBtn.addEventListener('click', saveToLocalStorage);
